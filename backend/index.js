@@ -24,8 +24,8 @@ const uri = process.env.MONGO_URL;
 
 
 const allowedOrigins = [
-  "https://tradexafrontend.vercel.app",
-  "https://tradexadashboard.vercel.app"
+  "https://trade-nests-frontend.vercel.app/",
+  "https://trade-nests-dashboard.vercel.app/"
 ];
 
 app.use(
@@ -185,7 +185,7 @@ app.post("/signup", async (req, res) => {
 
           res.status(200).json({
               message: "Signup successful",
-              redirectUrl: "https://tradexadashboard.vercel.app",
+              redirectUrl: "https://trade-nests-dashboard.vercel.app/",
               user: { name: registeredUser.name, email: registeredUser.email },
           });
       });
@@ -254,7 +254,7 @@ app.post("/login", async (req, res) => {
                 // Send redirect URL to frontend
                 return res.status(200).json({
                     message: "Login successful",
-                    redirectUrl: "https://tradexadashboard.vercel.app", // Redirect to dashboard folder
+                    redirectUrl: "https://trade-nests-dashboard.vercel.app/", // Redirect to dashboard folder
                     user: { name: authenticatedUser.name, email: authenticatedUser.email }
                 });
             });
