@@ -146,6 +146,13 @@ app.get("/currentUser", (req, res) => {
   res.status(401).json({ message: "User not authenticated" });
 });
 
+const DEBUG_URL = process.env.DEBUG_URL || "debug";
+
+app.get(`/${DEBUG_URL}`, (req, res) => {
+  res.send("Debug route working!");
+});
+
+
 // --- Start Server ---
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
