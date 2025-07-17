@@ -31,7 +31,7 @@ function Universe() {
                     <img src='media/images/dittoLogo.png' alt='' style={{width: "40%"}} />
                     <p className='text-small text-muted'> Personalized advice on lifeand health insurance. No spam and no mis-selling.</p>
                 </div>
-                <button className='p-2 btn btn-primary fs-5 mb-5' style={{width: "22%", margin: "0 auto"}}>Sign up for free</button>
+                {/* <button className='p-2 btn btn-primary fs-5 mb-5' style={{width: "22%", margin: "0 auto"}}>Sign up for free</button> */}
             </div>
         </div>
     );
