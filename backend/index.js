@@ -24,9 +24,10 @@ const uri = process.env.MONGO_URL;
 
 
 const allowedOrigins = [
-  "https://trade-nests-frontend.vercel.app/",
-  "https://trade-nests-dashboard.vercel.app/"
+  "https://trade-nests-frontend.vercel.app",
+  "https://trade-nests-dashboard.vercel.app"
 ];
+
 
 app.use(
   cors({
