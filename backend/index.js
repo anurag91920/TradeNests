@@ -182,6 +182,9 @@ app.post("/logout", (req, res) => {
   });
 });
 
+app.get("/", (req, res) => {
+  res.send("TradeNests Backend is live!");
+});
 
 
 app.listen(PORT, () => {
