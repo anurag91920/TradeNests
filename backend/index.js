@@ -2,27 +2,34 @@ require("dotenv").config();
 
 const express = require("express");
 const app = express();
-
+const flash = require("connect-flash");
 const mongoose = require("mongoose");
+const { HoldingsModel } = require("./model/HoldingsModel");
+const { PositionsModel } = require("./model/PositionsModel");
+const { OrdersModel } = require("./model/OrdersModel");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const passport = require("passport");
+const localStrategy = require("passport-local");
+const User = require("./schemas/user");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const User = require("./schemas/user"); // Mongoose User model with passport-local-mongoose plugin
-const cors = require("cors");
-const bodyParser = require("body-parser");
 
 const PORT = process.env.PORT || 3002;
-const MONGO_URL = process.env.MONGO_URL;
-const SESSION_SECRET = process.env.SESSION_SECRET || "MySecretCode";
+const url = process.env.MONGO_URL;
+const JWT_SECRET = process.env.JWT_SECRET;
+const SESSION_SECRET = process.env.SESSION_SECRET || "defaultsecret";
 
+// CORS setup
 const allowedOrigins = [
   "https://trade-nests-frontend.vercel.app",
-  "https://trade-nests-dashboard.vercel.app",
+  "https://trade-nests-dashboard.vercel.app"
 ];
 
-// --- CORS Setup ---
-const corsOptions = {
+app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -31,57 +38,61 @@ const corsOptions = {
     }
   },
   credentials: true,
-};
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+}));
 
-// --- Body Parsers ---
 app.use(bodyParser.json());
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// --- MongoDB Connection ---
-mongoose
-  .connect(MONGO_URL)
-  .then(() => console.log("MongoDB connected!"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+// Session setup
+const sessionOptions = {
+  secret: SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: url,
+    touchAfter: 24 * 3600, // 24 hours
+  }),
+  cookie: {
+    secure: process.env.NODE_ENV === "production", // prod में true, dev में false रखें
+    httpOnly: true,
+    sameSite: "none", // cross-site cookie के लिए जरूरी (Vercel)
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 दिन
+  },
+};
 
-// --- Session Setup ---
-app.set("trust proxy", 1); // For HTTPS proxy setups (e.g. on Vercel, Render)
-app.use(
-  session({
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: MONGO_URL }),
-    cookie: {
-      secure: process.env.NODE_ENV === "production", // HTTPS only in prod
-      httpOnly: true,
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    },
-  })
-);
+app.set("trust proxy", 1); // अगर behind proxy है तो जरूरी
 
-// --- Passport Setup ---
+app.use(session(sessionOptions));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Using passport-local-mongoose methods for authentication
-passport.use(new LocalStrategy({ usernameField: "email" }, User.authenticate()));
+passport.use(User.createStrategy());
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// --- ROUTES ---
+app.use(flash());
 
-// Signup Route
+// MongoDB connect
+mongoose.connect(url)
+  .then(() => console.log("DB Connected!"))
+  .catch((err) => console.error("DB Connection Failed:", err));
+
+app.use((req, res, next) => {
+  console.log("Session details:", req.session);
+  console.log("Authenticated user:", req.user);
+  next();
+});
+
+// Signup route
 app.post("/signup", async (req, res) => {
-  const { name, email, password } = req.body;
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
-
   try {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already registered" });
@@ -92,68 +103,87 @@ app.post("/signup", async (req, res) => {
 
     req.login(registeredUser, (err) => {
       if (err) {
-        return res.status(500).json({ message: "Signup succeeded but login failed" });
+        console.error("Login error:", err);
+        return res.status(500).json({ message: "Signup successful, but login failed" });
       }
       res.status(200).json({
         message: "Signup successful",
+        redirectUrl: "https://trade-nests-dashboard.vercel.app",
         user: { name: registeredUser.name, email: registeredUser.email },
-        redirectUrl: "https://trade-nests-dashboard.vercel.app/",
       });
     });
   } catch (err) {
+    console.error("Signup error:", err);
     res.status(500).json({ message: "Signup failed", error: err.message });
   }
 });
 
-// Login Route
-app.post("/login", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) return res.status(500).json({ message: "Internal server error" });
-    if (!user) return res.status(401).json({ message: info.message || "Invalid credentials" });
+// Login route
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-    req.login(user, (err) => {
-      if (err) return res.status(500).json({ message: "Login failed" });
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "User not found!" });
+    }
 
-      res.status(200).json({
-        message: "Login successful",
-        user: { name: user.name, email: user.email },
-        redirectUrl: "https://trade-nests-dashboard.vercel.app/",
+    user.authenticate(password, (err, authenticatedUser, passwordError) => {
+      if (err) {
+        console.error("Error during authentication:", err);
+        return res.status(500).json({ message: "Internal server error" });
+      }
+      if (!authenticatedUser) {
+        return res.status(401).json({ message: passwordError?.message || "Invalid credentials" });
+      }
+
+      req.login(authenticatedUser, (err) => {
+        if (err) {
+          console.error("Error during session login:", err);
+          return res.status(500).json({ message: "Login failed" });
+        }
+
+        // JWT Token generate करना है तो यहाँ कर सकते हैं:
+        /*
+        const token = jwt.sign(
+          { id: authenticatedUser._id, email: authenticatedUser.email },
+          JWT_SECRET,
+          { expiresIn: "1h" }
+        );
+        */
+
+        return res.status(200).json({
+          message: "Login successful",
+          redirectUrl: "https://trade-nests-dashboard.vercel.app",
+          user: { name: authenticatedUser.name, email: authenticatedUser.email },
+          // token: token, // अगर JWT generate करें तो client को भेजें
+        });
       });
     });
-  })(req, res, next);
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
-// Logout Route
+// Logout route
 app.post("/logout", (req, res) => {
   req.logout((err) => {
-    if (err) return res.status(500).json({ message: "Logout failed" });
-
+    if (err) {
+      return res.status(500).json({ message: "Logout failed" });
+    }
     req.session.destroy((err) => {
-      if (err) return res.status(500).json({ message: "Session destroy failed" });
-
+      if (err) {
+        return res.status(500).json({ message: "Error clearing session" });
+      }
       res.clearCookie("connect.sid");
-      res.status(200).json({ message: "Logout successful" });
+      return res.status(200).json({ message: "Logout successful" });
     });
   });
 });
 
-// Check current user session
-app.get("/currentUser", (req, res) => {
-  if (req.isAuthenticated()) {
-    const { name, email } = req.user;
-    return res.status(200).json({ user: { name, email } });
-  }
-  res.status(401).json({ message: "User not authenticated" });
-});
-
-const DEBUG_URL = process.env.DEBUG_URL || "debug";
-
-app.get(`/${DEBUG_URL}`, (req, res) => {
-  res.send("Debug route working!");
-});
 
 
-// --- Start Server ---
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });

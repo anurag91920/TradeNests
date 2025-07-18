@@ -24,7 +24,7 @@ const Signup = () => {
         headers: {
           "Content-Type": "application/json"
         },
-        withCredentials: true // ✅ Agar backend cookies ya auth tokens bhej raha hai
+        withCredentials: true //  Agar backend cookies ya auth tokens bhej raha hai
       });
 
       if (response.status === 200) {
