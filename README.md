@@ -30,5 +30,29 @@
 
 ---
 
-## 🗂️ Project Structure
+## 📷 Screenshots
+
+Add screenshots of the main trading UI, dashboard, charts, etc.
+
+🧠 Future Enhancements
+
+Real-time data with WebSockets
+
+Advanced charting tools
+
+Multi-user roles and permissions
+
+Portfolio tracking
+
+Notifications and alerts
+
+📌 License
+
+This project is licensed under the MIT License.
+
+🙋‍♂️ Author
+
+ANURAG CHAURASIYA
+📧 Email: anurag9120959628@gmail.com
+💼 GitHub: github.com/anurag91920
 
