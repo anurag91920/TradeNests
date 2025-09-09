@@ -1,0 +1,36 @@
+
+.navbar {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+
+.navbar .nav-link {
+  color: #ffffff !important;              
+  transition: color 0.3s ease;
+  padding: 8px 15px;
+}
+
+
+.navbar .nav-link:hover {
+  color: #febe01 !important;         
+}
+
+
+.navbar-toggler {
+  border: none;
+}
+.navbar-toggler:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+
+@media (max-width: 768px) {
+  .navbar-nav {
+    text-align: center;
+  }
+  .navbar-nav .nav-item {
+    margin: 8px 0;
+  }
+}

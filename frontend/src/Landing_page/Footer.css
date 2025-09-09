@@ -1,0 +1,55 @@
+.body {
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+
+.mt-2.fs-2 a i {
+  color: #ffffff !important;        
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+
+.mt-2.fs-2 a:hover i {
+  color: #febe01 !important; /* blue on hover */
+}
+
+.con p {
+  color: #ffffff !important;
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  display: block;
+  color: #ffffff !important;        
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+  font-size: 15px;
+}
+
+.footer-links a:hover {
+  color: #febe01 !important; /* yellow on hover */
+}
+
+.footer-links i {
+  width: 20px; /* icons align properly */
+  text-align: center;
+}
+.footer-links {
+  margin-bottom: 20px;
+}
+
+/* Mobile ke liye center align */
+@media (max-width: 768px) {
+  .footer-links {
+    text-align: center;
+  }
+  .social-icons {
+    text-align: center;
+  }
+}
