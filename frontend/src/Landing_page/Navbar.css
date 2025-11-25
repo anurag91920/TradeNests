@@ -1,22 +1,24 @@
-
 .navbar {
   font-size: 16px;
   font-weight: 500;
 }
 
+body {
+  padding-top: 70px;
+}
+
 
 .navbar .nav-link {
-  color: #ffffff !important;              
+  color: #ffffff !important;
   transition: color 0.3s ease;
   padding: 8px 15px;
 }
 
-
 .navbar .nav-link:hover {
-  color: #febe01 !important;         
+  color: #febe01 !important;
 }
 
-
+/* Remove default borders */
 .navbar-toggler {
   border: none;
 }
@@ -25,12 +27,16 @@
   box-shadow: none;
 }
 
-
+/* Mobile Styling */
 @media (max-width: 768px) {
   .navbar-nav {
     text-align: center;
   }
   .navbar-nav .nav-item {
-    margin: 8px 0;
+    margin: 10px 0;
   }
+}
+/* Active Link Styling */
+.navbar .nav-link.active {
+  color: #febe01 !important;
 }
