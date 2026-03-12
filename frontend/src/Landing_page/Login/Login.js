@@ -62,14 +62,8 @@ const Login = () => {
                     <form onSubmit={handleSubmit}>
                       {/* Logo & Heading */}
                       <div className="d-flex align-items-center mb-3 pb-1">
-                        <img
-                          src="media/images/logoTradex.webp"
-                          style={{ width: "12%", borderRadius: "50%" }}
-                          alt="Tradexa"
-                        />
-                        &nbsp;
                         <span className="h1 fw-bold mb-0" style={{ color: "#007BFF" }}>
-                          TRADEXA
+                          TRADENESTS
                         </span>
                       </div>
                       <h5 className="fw-normal mb-3 pb-3" style={{ letterSpacing: "1px" }}>
@@ -114,11 +108,9 @@ const Login = () => {
                       <p className="mb-2" style={{ color: "#393f81" }}>
                         Don't have an account?{" "}
                         <Link to="/signup" style={{ color: "#007BFF" }}>
-    Register here
-  </Link>
+                            Register here
+                         </Link>
                       </p>
-
-                     
                     </form>
 
                     {/* Error Message */}

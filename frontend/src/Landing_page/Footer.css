@@ -8,24 +8,24 @@
 
 
 .mt-2.fs-2 a i {
-  color: #ffffff !important;        
+  color: #333 !important;        
   transition: color 0.3s ease;
   cursor: pointer;
 }
 
 
 .mt-2.fs-2 a:hover i {
-  color: #febe01 !important; /* blue on hover */
+  color: #0051ff !important; /* blue on hover */
 }
 
 .con p {
-  color: #ffffff !important;
+  color: #333 !important;
   margin-bottom: 12px;
 }
 
 .footer-links a {
   display: block;
-  color: #ffffff !important;        
+  color: #333 !important;        
   text-decoration: none;
   margin-bottom: 8px;
   transition: color 0.3s ease;
@@ -33,7 +33,7 @@
 }
 
 .footer-links a:hover {
-  color: #febe01 !important; /* yellow on hover */
+  color: #0051ff !important; /* blue on hover */
 }
 
 .footer-links i {
