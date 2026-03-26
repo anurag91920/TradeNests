@@ -115,6 +115,9 @@ const Signup = () => {
                 </button>
 
                 {error && <p className="text-danger mt-3">{error}</p>}
+
+                Login to your account? <a href="/login">Login</a>
+
               </form>
             </div>
           </div>

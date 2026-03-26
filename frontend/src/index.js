@@ -9,6 +9,7 @@ import PricingPage from './Landing_page/Pricing/PricingPage';
 import AboutPage from './Landing_page/About/AboutPage';
 import ProductsPage from './Landing_page/Products/ProductsPage';
 import SupportPage from './Landing_page/Support/SupportPage';
+import Contact from './Landing_page/Contact';  // <-- Yahan import karo
 import Navbar from './Landing_page/Navbar';
 import Footer from './Landing_page/Footer';
 import NotFound from './Landing_page/NotFound';
@@ -29,7 +30,9 @@ root.render(
       <Route path='/Products' element={<ProductsPage />} />
       <Route path='/Pricing' element={<PricingPage />} />
       <Route path='/Support' element={<SupportPage />} />
+      <Route path='/Contact' element={<Contact />} />
       <Route path='/*' element={<NotFound />} />
+      
     </Routes>
     <Footer />
   </BrowserRouter>

@@ -16,6 +16,7 @@ function Hero() {
                         Online platform to invest in stocks, derivatives, mutual funds, and more
                     </p>
                 </div>
+                 <a href='/signup' className='p-2 btn btn-primary fs-5 mb-5' style={{width: "22%", margin: "0 auto"}}>Signup for free</a>
 
             </div>
         </div>

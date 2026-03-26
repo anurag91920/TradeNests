@@ -58,7 +58,7 @@ function Footer() {
                     {/* Account Section */}
                     <div className='col-6 col-md-3 mb-4 footer-links'>
                       <p className="fw-bold">Account</p>
-                      <Link to="/open-account"><i className="fa-solid fa-user-plus me-2"></i>Open an account</Link>
+                      <Link to="/signup"><i className="fa-solid fa-user-plus me-2"></i>Open an account</Link>
                      
                     </div>
 
