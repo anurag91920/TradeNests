@@ -59,7 +59,7 @@ function Universe() {
                         Personalized advice on life and health insurance. No spam and no mis-selling.
                     </p>
                 </div>
-                  <a href='/signup' className='p-2 btn btn-primary fs-5 mb-5' style={{width: "22%", margin: "0 auto"}}>Signup for free</a>
+                  <a href='/signup' className='p-2 btn btn-primary fs-5 mb-5 w-100' style={{width: "100%",maxWidth: "250px", margin: "0 auto"}}>Signup for free</a>
             </div>
              
         </div>

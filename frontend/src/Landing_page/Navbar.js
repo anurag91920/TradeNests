@@ -23,6 +23,7 @@ function Navbar() {
         <button
           className="navbar-toggler"
           type="button"
+          aria-expanded={openMenu}
           onClick={() => setOpenMenu(!openMenu)}
         >
           <div className="hamburger">
@@ -33,7 +34,7 @@ function Navbar() {
         </button>
 
         {/* Menu Links */}
-        <div className="collapse navbar-collapse show">
+        <div className={`collapse navbar-collapse ${openMenu ? "show" : ""}`}>
           <ul className="navbar-nav ms-auto">
 
             <li className="nav-item">
